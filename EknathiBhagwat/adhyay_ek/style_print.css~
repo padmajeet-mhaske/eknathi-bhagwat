@@ -1,0 +1,160 @@
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
+
+blockquote cite {
+color: #999999;
+font-size: 14px;
+display: block;
+margin-top: 5px;
+}
+ 
+blockquote cite:before {
+content: "\2014 \2009";
+}
+
+p{
+
+font-family: "Glegoo",serif;
+float: left;
+margin: 0px 5px;
+
+}
+
+article{
+
+font-family: "Glegoo",serif;
+margin : 50px 10px;
+padding : 20px;
+width : 80%;
+clear:both;
+height:auto;
+color:#404040;
+page-break-after: always;
+page-break-before : always;
+page-break-inside: avoid;
+
+}
+
+.quote {
+background:#FFD573;
+width:100%;
+margin:40px 0px 20px;
+padding:40px 2px 10px;
+overflow:auto;
+display:table;
+
+page-break-after: always;
+page-break-before : always;
+page-break-inside: avoid;
+
+}
+.quote p{
+
+font-family: "Amita",serif;
+font-size : 1.5em;
+clear:both;
+padding:10px;
+margin : 5px;
+text-align: left;
+color: #D62712;
+
+page-break-after: always;
+page-break-before : always;
+page-break-inside: avoid;
+width:80%;
+}
+
+h1{
+
+font-family: "Amita",serif;
+font-size : 3.5em;
+clear:both;
+width : 80%;
+text-align:center;
+padding : 10px 5px;
+color:#FF8C0D;
+
+page-break-after: always;
+page-break-before : always;
+page-break-inside: avoid;
+
+running: chapter;
+}
+
+br{
+clear:both;
+}
+
+h1:running {
+font-family: "Amita",serif;
+display: inline;
+font-size: 11pt;
+font-weight: normal;
+font-variant: small-caps;
+letter-spacing: 1pt;
+
+}
+
+@page{
+	size: A4 landscape;
+	orphans:1; 
+	widows:1;
+	margin: 1cm ;
+        border : 2px solid black;
+    @top-center {
+	    content: element(chapter);
+	}
+  
+@top-left-corner { content: none; } 
+@top-left { content: none; } 
+@top-right { content: none; } 
+@top-right-corner { content: none; } 
+@right-top { content: none; } 
+@right-middle { content: none; } 
+@right-bottom { content: none; } 
+@bottom-right-corner { content: none; } 
+@bottom-right { content: none; } 
+@bottom-center { content: counter(page); } 
+@bottom-left { content: none; } 
+@bottom-left-corner { content: none; } 
+@left-bottom { content: none; } 
+@left-middle { content: none; } 
+@left-top { content: none; } 
+
+
+}
+
+   @page :first {
+      margin-top: 10cm ;   /* Top margin on first page 10cm */
+   }
+
+
+
+
+@page :blank {
+  @top-center { content: none }
+}
+
+
+ 	
+
+
+
+
+
