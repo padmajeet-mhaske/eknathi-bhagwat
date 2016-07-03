@@ -50,7 +50,7 @@ font-family: "Amita",serif;
 float: left;
 margin: 0px auto;
 width:auto;
-
+line-height: 2.0em;
 }
 
 article{
@@ -154,6 +154,27 @@ blockquote p {
 	margin: 0px auto;
 	clear: both;
 }
+
+section{
+	width: 100%;
+	display:inline-block;	
+
+
+}
+
+
+section p{
+	width: 50%;
+}
+
+
+blockquote section p {
+	width: 100%;
+	display: inline;
+	margin: 0px auto;
+	clear: both;
+}
+
 blockquote  {
 
 	display: block;
@@ -162,7 +183,7 @@ blockquote  {
 	padding: 20px 10px 18px 20px;
 	border: none;
 	margin: 5px auto;
-	text-indent: 23px;
+	text-indent: 5%;
 	color: #D62712;
 	clear: both;	
 
@@ -175,13 +196,13 @@ blockquote cite {
 	color: #D62712;
 	font-size: 1.1em;
 	clear:both;
+	margin-left: -5%;
 	
 }
  
 
-blockquote cite p{
+blockquote section cite p{
 	display:block;
-	width:auto;
 	font: Amita, serif;
 	color: #D62712;
 	font-size: 0.7em;
