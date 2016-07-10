@@ -76,7 +76,7 @@ html{
 	border-right :10px double #FF7F00;
 	margin: 0px 20px 0px 20px;
 	padding: 0px 10px 520px 10px;
-	background-color: #f1f6f8;
+	background-color: #efefda;
 	background-image: url("./images/Transparent_Floral_Decoration_tl.png"), url("./images/Transparent_Floral_Decoration_tr.png"), url("./images/floral_swirl_digital_scrapbook_image1.png"), url("./images/Transparent_Floral_Decoration_bl.png"), url("./images/Transparent_Floral_Decoration_br.png");
 	background-position: top left, top right, bottom  center, bottom left, bottom right; /*Positioning*/
 	background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
@@ -132,6 +132,12 @@ background : transparent url("./images/floral-frame-png_o1.png") no-repeat scrol
 line-height:500px;
 height:500px
 running: chapter;
+text-shadow: -2px -2px 2px #fff, 2px 2px 2px #000;
+letter-spacing:2px;
+}
+
+h2{
+color:#8c0dff;
 }
 
 br{
@@ -173,6 +179,8 @@ blockquote section p {
 	display: inline;
 	margin: 0px auto;
 	clear: both;
+	letter-spacing:1px;
+
 }
 
 blockquote  {
