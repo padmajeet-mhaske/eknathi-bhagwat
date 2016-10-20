@@ -5,19 +5,23 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Created by mhaskep on 10/20/2016.
+ * This is Randomizer and Primer Based application to generate random numbers and detect if those are PRIME numbers.
+ * Created by mhaske padmajeet on 10/20/2016.
  */
 public class RandomPrime {
 
     public static void main(String[] args) {
-
+    
+        //Basic Java based LinkedBlocking queues for Communication between Randomizer and Primers
         final BlockingQueue<PrimeBean> priorityBlockingQueue = new LinkedBlockingQueue<PrimeBean>();
         final BlockingQueue<PrimeBean> resultantBlockingQueue = new LinkedBlockingQueue<PrimeBean>();
 
+        //Randomizer to produce random Numbers
         Randomizer randomizer = new Randomizer(
                 priorityBlockingQueue, resultantBlockingQueue);
         new Thread(randomizer, "Randomizer").start();
-
+    
+        //Primers to detect if produced number is Prime or not.
         Primer primer1 = new Primer(
                 priorityBlockingQueue, resultantBlockingQueue);
         new Thread(primer1, "Primer One").start();
@@ -29,7 +33,7 @@ public class RandomPrime {
     }
 }
 
-
+/* Randomizer class to enerate Ranoms numbers */
 
 class Randomizer implements Runnable {
 
@@ -46,18 +50,25 @@ class Randomizer implements Runnable {
     public void run() {
         while (true) {
             try {
+                //Random Numbers are generate between0-100 and are added to blocking queue.
                 PrimeBean primeBean = new PrimeBean((int)(Math.random()*100));
                 System.out.println("Put: " + primeBean);
-
+              
                 blockingQueue.put(primeBean);
 
+                //Thread sleeps until result is generated.
                 Thread.sleep(100);
 
+                // Result would be picked from resultQueue and output will be added to Console 
                 PrimeBean processedPrime = resultQueue.take();
 
                 if(processedPrime.isProcessed()){
                     System.out.println( primeBean.getPrime() + " is " + primeBean.getMessage() + " number");
                 } else {
+                    //In worst case if object is not processed,it would be added back to queue; 
+                    //this should not happen current case, 
+                    //but if same queue is used as result and blocking queue this can happen.
+                    
                     blockingQueue.put(primeBean);
                 }
             } catch (InterruptedException e) {
@@ -67,6 +78,8 @@ class Randomizer implements Runnable {
     }
 
 }
+
+/* Primer class to verify prime numbers */
 
 class Primer implements Runnable {
 
@@ -83,12 +96,13 @@ class Primer implements Runnable {
     public void run() {
         while (true) {
             try {
+                //Primer would read object from queue and verified its PRIMEness
                 PrimeBean prime = blockingQueue.take();
 
                 System.out.println(Thread.currentThread().getName()
                         + " take(): " + prime);
 
-
+                //If object is processed then add message and put object to result queue
                 if(!prime.isProcessed()){
                     if(isPrime(prime.getPrime())){
                         prime.setProcessed(true);
@@ -99,7 +113,8 @@ class Primer implements Runnable {
                     }
                     resultQueue.put(prime);
                 } else {
-                    blockingQueue.put(prime);
+                    //If Object is already processed put it to resultQueue
+                    resultQueue.put(prime);
                 }
 
                 Thread.sleep(200);
@@ -126,6 +141,7 @@ class Primer implements Runnable {
 
 }
 
+/* PrimeBean to carry Integer in concern and processing status and resultant message. */
 
 class PrimeBean {
 
