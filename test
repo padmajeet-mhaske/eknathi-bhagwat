@@ -1,4 +1,4 @@
-package com.ubs.advisory.cmis.f35.util;
+package test;
 
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
@@ -12,24 +12,20 @@ public class RandomPrime {
     public static void main(String[] args) {
 
         final BlockingQueue<PrimeBean> priorityBlockingQueue = new LinkedBlockingQueue<PrimeBean>();
+        final BlockingQueue<PrimeBean> resultantBlockingQueue = new LinkedBlockingQueue<PrimeBean>();
 
         Randomizer randomizer = new Randomizer(
-                priorityBlockingQueue);
+                priorityBlockingQueue, resultantBlockingQueue);
         new Thread(randomizer, "Randomizer").start();
 
         Primer primer1 = new Primer(
-                priorityBlockingQueue);
+                priorityBlockingQueue, resultantBlockingQueue);
         new Thread(primer1, "Primer One").start();
 
         Primer primer2 = new Primer(
-                priorityBlockingQueue);
+                priorityBlockingQueue, resultantBlockingQueue);
         new Thread(primer2, "Primer Two").start();
-
-        /*Primer queueConsumer3 = new Primer(
-                priorityBlockingQueue);
-        new Thread(queueConsumer3).start();*/
-
-
+        
     }
 }
 
@@ -38,10 +34,12 @@ public class RandomPrime {
 class Randomizer implements Runnable {
 
     protected BlockingQueue<PrimeBean> blockingQueue;
+    protected BlockingQueue<PrimeBean> resultQueue;
     final Random random = new Random();
 
-    public Randomizer(BlockingQueue<PrimeBean> queue) {
+    public Randomizer(BlockingQueue<PrimeBean> queue, BlockingQueue<PrimeBean> resultQueue) {
         this.blockingQueue = queue;
+        this.resultQueue = resultQueue;
     }
 
     @Override
@@ -55,7 +53,7 @@ class Randomizer implements Runnable {
 
                 Thread.sleep(100);
 
-                PrimeBean processedPrime = blockingQueue.take();
+                PrimeBean processedPrime = resultQueue.take();
 
                 if(processedPrime.isProcessed()){
                     System.out.println( primeBean.getPrime() + " is " + primeBean.getMessage() + " number");
@@ -73,9 +71,12 @@ class Randomizer implements Runnable {
 class Primer implements Runnable {
 
     protected BlockingQueue<PrimeBean> blockingQueue;
+    protected BlockingQueue<PrimeBean> resultQueue;
 
-    public Primer(BlockingQueue<PrimeBean> queue) {
+    public Primer(BlockingQueue<PrimeBean> queue, BlockingQueue<PrimeBean> resultQueue) {
+
         this.blockingQueue = queue;
+        this.resultQueue = resultQueue;
     }
 
     @Override
@@ -96,9 +97,10 @@ class Primer implements Runnable {
                         prime.setProcessed(true);
                         prime.setMessage("not a PRIME");
                     }
+                    resultQueue.put(prime);
+                } else {
+                    blockingQueue.put(prime);
                 }
-
-                blockingQueue.put(prime);
 
                 Thread.sleep(200);
 
@@ -123,9 +125,6 @@ class Primer implements Runnable {
 
 
 }
-
-
-
 
 
 class PrimeBean {
