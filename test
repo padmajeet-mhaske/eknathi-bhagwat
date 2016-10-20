@@ -1,0 +1,175 @@
+package com.ubs.advisory.cmis.f35.util;
+
+import java.util.Random;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * Created by mhaskep on 10/20/2016.
+ */
+public class RandomPrime {
+
+    public static void main(String[] args) {
+
+        final BlockingQueue<PrimeBean> priorityBlockingQueue = new LinkedBlockingQueue<PrimeBean>();
+
+        Randomizer randomizer = new Randomizer(
+                priorityBlockingQueue);
+        new Thread(randomizer, "Randomizer").start();
+
+        Primer primer1 = new Primer(
+                priorityBlockingQueue);
+        new Thread(primer1, "Primer One").start();
+
+        Primer primer2 = new Primer(
+                priorityBlockingQueue);
+        new Thread(primer2, "Primer Two").start();
+
+        /*Primer queueConsumer3 = new Primer(
+                priorityBlockingQueue);
+        new Thread(queueConsumer3).start();*/
+
+
+    }
+}
+
+
+
+class Randomizer implements Runnable {
+
+    protected BlockingQueue<PrimeBean> blockingQueue;
+    final Random random = new Random();
+
+    public Randomizer(BlockingQueue<PrimeBean> queue) {
+        this.blockingQueue = queue;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                PrimeBean primeBean = new PrimeBean((int)(Math.random()*100));
+                System.out.println("Put: " + primeBean);
+
+                blockingQueue.put(primeBean);
+
+                Thread.sleep(100);
+
+                PrimeBean processedPrime = blockingQueue.take();
+
+                if(processedPrime.isProcessed()){
+                    System.out.println( primeBean.getPrime() + " is " + primeBean.getMessage() + " number");
+                } else {
+                    blockingQueue.put(primeBean);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+}
+
+class Primer implements Runnable {
+
+    protected BlockingQueue<PrimeBean> blockingQueue;
+
+    public Primer(BlockingQueue<PrimeBean> queue) {
+        this.blockingQueue = queue;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                PrimeBean prime = blockingQueue.take();
+
+                System.out.println(Thread.currentThread().getName()
+                        + " take(): " + prime);
+
+
+                if(!prime.isProcessed()){
+                    if(isPrime(prime.getPrime())){
+                        prime.setProcessed(true);
+                        prime.setMessage("a PRIME");
+                    } else {
+                        prime.setProcessed(true);
+                        prime.setMessage("not a PRIME");
+                    }
+                }
+
+                blockingQueue.put(prime);
+
+                Thread.sleep(200);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //checks whether an int is prime or not.
+    boolean isPrime(int n) {
+        //check if n is a multiple of 2
+        if (n%2==0) return false;
+        //if not, then just check the odds
+        for(int i=3;i*i<=n;i+=2) {
+            if(n%i==0)
+                return false;
+        }
+        return true;
+    }
+
+
+
+}
+
+
+
+
+
+class PrimeBean {
+
+    private Integer prime;
+    private String message;
+    private boolean isProcessed;
+
+    public PrimeBean(Integer prime) {
+        this.prime = prime;
+        this.message = "";
+        this.isProcessed = false;
+    }
+
+    public Integer getPrime() {
+        return prime;
+    }
+
+    public void setPrime(Integer prime) {
+        this.prime = prime;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isProcessed() {
+        return isProcessed;
+    }
+
+    public void setProcessed(boolean processed) {
+        isProcessed = processed;
+    }
+
+    @Override
+    public String toString() {
+        return "PrimeBean{" +
+                "prime=" + prime +
+                ", message='" + message + '\'' +
+                ", isProcessed=" + isProcessed +
+                '}';
+    }
+}
